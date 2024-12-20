@@ -3,7 +3,11 @@
             <a-col flex="200px">
                 <RouterLink to="/">
                     <div class="container">
-                        <img class="logo" src="../assets/logo.svg" alt="logo" />
+                        <a-avatar :size="{ xs: 20, sm: 20, md: 30, lg: 40, xl: 50, xxl: 70 }">
+                            <template #icon>
+                                <img src="../assets/logo.png"/>
+                            </template>
+                        </a-avatar>
                         <div class="title">by ziio</div>
                     </div>
                 </RouterLink>

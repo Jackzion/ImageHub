@@ -5,6 +5,7 @@
       </a-layout-header>
 
       <a-layout-content style="  
+            margin-top: 20px;
             margin-bottom: 28px;
             padding: 20px;">
         <h1>content</h1>

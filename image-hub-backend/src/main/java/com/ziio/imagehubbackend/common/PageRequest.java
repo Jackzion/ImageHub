@@ -5,9 +5,9 @@ import lombok.Data;
 @Data
 public class PageRequest {
 
-    private int current = 1;
+    private long current = 1;
 
-    private int pageSize = 10;
+    private long pageSize = 10;
 
     private String sortField;
 
