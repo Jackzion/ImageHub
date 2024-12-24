@@ -33,8 +33,8 @@
                 </div>
             </template>
             <template v-if="column.dataIndex === 'createTime'">
-                {{ dayjs(record.createTime).format('YYYY-MM-DD HH:mm:ss') }}
             </template>
+                {{ dayjs(record.createTime).format('YYYY-MM-DD HH:mm:ss') }}
             <template v-if="column.dataIndex === 'updateTime'">
                 {{ dayjs(record.updateTime).format('YYYY-MM-DD HH:mm:ss') }}
             </template>
