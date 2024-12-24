@@ -50,6 +50,14 @@ public class UserController {
         return ResultUtil.success(result);
     }
 
+    @PostMapping("/logout")
+    public BaseResponse<Boolean> userLogout(HttpServletRequest request){
+        User user = (User)request.getSession().getAttribute(UserConstant.USER_LOGIN_STATE);
+        ThrowUtils.throwIf(user==null , ErrorCode.NOT_LOGIN_ERROR);
+        request.getSession().removeAttribute(UserConstant.USER_LOGIN_STATE);
+        return ResultUtil.success(true);
+    }
+
     @GetMapping("/current")
     public BaseResponse<LoginUserVO> getLoginUser(HttpServletRequest request){
         User loginUser = this.userService.getLoginUser(request);

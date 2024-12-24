@@ -18,7 +18,13 @@
             <a-col flex="120px">
                 <div class="user-login-status">
                     <div v-if="loginUserStore.loginUser.id">
-                        {{ loginUserStore.loginUser.userName ?? '无名' }}
+                        <a-popover>
+                            <template #content>
+                                <LogoutOutlined/>
+                                <a-button type="warn" href="/user/login" @click="doLogout">注销</a-button>
+                            </template>
+                            <a-button type="primary">{{loginUserStore.loginUser.userAccount}}</a-button>
+                        </a-popover>
                     </div>
                     <div v-else>
                         <a-button type="primary" href="/user/login">登录</a-button>
@@ -31,10 +37,11 @@
 
 <script lang="ts" setup>
 import { h, ref } from 'vue';
-import { MailOutlined, AppstoreOutlined, SettingOutlined } from '@ant-design/icons-vue';
+import { MailOutlined, AppstoreOutlined, SettingOutlined, LogoutOutlined } from '@ant-design/icons-vue';
 import {useLoginUserStore} from '@/store/user.ts'
-import { MenuProps } from 'ant-design-vue';
+import { MenuProps, message } from 'ant-design-vue';
 import { useRouter } from "vue-router";
+import { userLogoutUsingPost } from '@/api/userController';
 const current = ref<string[]>(['/']);
 const loginUserStore = useLoginUserStore();
 loginUserStore.fetchLoginUser()
@@ -105,6 +112,19 @@ router.afterEach((to) =>{
     current.value = [to.path]
 
 })
+
+const doLogout = async () => {
+    const res = await userLogoutUsingPost()
+    console.log(res)
+    if(res.data.code == 0 ){
+        loginUserStore.setLoginStore({
+            userName:'not login'
+        })
+        await router.push('user/login')
+    }else{
+        message.error("failed to logout" + res.data.message)
+    }
+}
 
 
 </script>

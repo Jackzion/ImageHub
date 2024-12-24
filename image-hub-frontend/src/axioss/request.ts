@@ -21,9 +21,9 @@ myAxios.interceptors.response.use(
     function (response){
         const {data} = response
         if(data.code === 40100){
-            if(!response.request.responseURL.includes('user/get/login') && !window.location.pathname.includes('/user/login')){
+            if(!response.request.responseURL.includes('user/get/login') && !window.location.pathname.includes('/user/login') && !window.location.pathname.includes('/user/register')){
                 message.warning('please login first')
-                window.location.href = '/user/login?redirect=${window.location.href}'
+                window.location.href = `/user/login?redirect=${window.location.href}`
             }
         }
         return response
