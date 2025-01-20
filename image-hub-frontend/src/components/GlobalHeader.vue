@@ -36,12 +36,12 @@
 </template>
 
 <script lang="ts" setup>
-import { h, ref } from 'vue';
-import { MailOutlined, AppstoreOutlined, SettingOutlined, LogoutOutlined } from '@ant-design/icons-vue';
-import {useLoginUserStore} from '@/store/user.ts'
-import { MenuProps, message } from 'ant-design-vue';
-import { useRouter } from "vue-router";
 import { userLogoutUsingPost } from '@/api/userController';
+import { useLoginUserStore } from '@/store/user.ts';
+import { AppstoreOutlined, LogoutOutlined, MailOutlined, SettingOutlined } from '@ant-design/icons-vue';
+import { type MenuProps, message } from 'ant-design-vue';
+import { h, ref } from 'vue';
+import { useRouter } from "vue-router";
 const current = ref<string[]>(['/']);
 const loginUserStore = useLoginUserStore();
 loginUserStore.fetchLoginUser()
@@ -57,6 +57,17 @@ const items = ref<MenuProps['items']>([
     icon: () => h(AppstoreOutlined),
     label: 'about',
     title: 'about',
+},
+{  
+  key: '/admin/pictureManage',  
+  label: '图片管理',  
+  title: '图片管理',  
+},
+{
+    key: '/add_picture',
+    icon: () => h(AppstoreOutlined),
+    label: 'Add Picture',
+    title: 'Add Picture',
 },
 {
     key: 'user',

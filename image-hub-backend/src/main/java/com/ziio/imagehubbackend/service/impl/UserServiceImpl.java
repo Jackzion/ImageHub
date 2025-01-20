@@ -134,6 +134,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         final String SALT = "ziio";
         return DigestUtils.md5DigestAsHex((SALT + password).getBytes());
     }
+
+    @Override
+    public boolean isAdmin(User user) {
+        return user!= null && UserRoleEnum.ADMIN.getValue().equals(user.getUserRole());
+    }
 }
 
 
