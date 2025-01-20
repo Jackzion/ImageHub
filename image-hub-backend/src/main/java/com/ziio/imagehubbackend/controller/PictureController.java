@@ -1,6 +1,7 @@
 package com.ziio.imagehubbackend.controller;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -12,13 +13,11 @@ import com.ziio.imagehubbackend.constant.UserConstant;
 import com.ziio.imagehubbackend.entity.Picture;
 import com.ziio.imagehubbackend.entity.PictureTagCategory;
 import com.ziio.imagehubbackend.entity.User;
+import com.ziio.imagehubbackend.enums.PictureReviewStatusEnum;
 import com.ziio.imagehubbackend.exception.BusinessException;
 import com.ziio.imagehubbackend.exception.ErrorCode;
 import com.ziio.imagehubbackend.exception.ThrowUtils;
-import com.ziio.imagehubbackend.request.picture.PictureEditRequest;
-import com.ziio.imagehubbackend.request.picture.PictureQueryRequest;
-import com.ziio.imagehubbackend.request.picture.PictureUpdateRequest;
-import com.ziio.imagehubbackend.request.picture.PictureUploadRequest;
+import com.ziio.imagehubbackend.request.picture.*;
 import com.ziio.imagehubbackend.service.PictureService;
 import com.ziio.imagehubbackend.service.UserService;
 import com.ziio.imagehubbackend.vo.picutre.PictureVO;
@@ -53,6 +52,19 @@ public class PictureController {
         return ResultUtil.success(pictureVO);
     }
 
+    @PostMapping("/upload/url")
+    public BaseResponse<PictureVO> uploadPictureByUrl(
+            PictureUploadRequest uploadRequest ,
+            HttpServletRequest request
+    )
+    {
+        User loginUser = userService.getLoginUser(request);
+        String url = uploadRequest.getFileUrl();
+        ThrowUtils.throwIf(StrUtil.isBlank(url),ErrorCode.PARAMS_ERROR);
+        PictureVO pictureVO = pictureService.uploadPicture(url,uploadRequest,loginUser);
+        return ResultUtil.success(pictureVO);
+    }
+
     @PostMapping("/delete")
     public BaseResponse<Boolean> deletePicture(@RequestBody DeleteRequest deleteRequest , HttpServletRequest request){
         if(deleteRequest == null || deleteRequest.getId() <= 0){
@@ -74,7 +86,7 @@ public class PictureController {
 
     @PostMapping("/update")
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
-    public BaseResponse<Boolean> updatePicture(@RequestBody PictureUpdateRequest pictureUpdateRequest){
+    public BaseResponse<Boolean> updatePicture(@RequestBody PictureUpdateRequest pictureUpdateRequest,HttpServletRequest request){
         if(pictureUpdateRequest == null || pictureUpdateRequest.getId() <= 0){
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
@@ -86,6 +98,9 @@ public class PictureController {
         Long id = pictureUpdateRequest.getId();
         Picture byId = pictureService.getById(id);
         ThrowUtils.throwIf(byId == null , ErrorCode.NOT_FOUND_ERROR);
+        // 补充审核参数
+        User loginUser = userService.getLoginUser(request);
+        pictureService.fillReviewParams(picture,loginUser);
         // 操作数据库
         boolean result = pictureService.updateById(byId);
         ThrowUtils.throwIf(!result,ErrorCode.OPERATION_ERROR);
@@ -123,6 +138,7 @@ public class PictureController {
     public BaseResponse<Page<PictureVO>> listPictureVOByPage(@RequestBody PictureQueryRequest queryRequest , HttpServletRequest request){
         long current = queryRequest.getCurrent();
         long pageSize = queryRequest.getPageSize();
+        queryRequest.setReviewStatus(PictureReviewStatusEnum.PASS.getValue());
         Page<Picture> picturePage = pictureService.page(new Page<>(current, pageSize), pictureService.getQueryWrapper(queryRequest));
         return ResultUtil.success(pictureService.getPictureVOPage(picturePage,request));
     }
@@ -149,6 +165,8 @@ public class PictureController {
         if(!picture1.getUserId().equals(loginUser.getId()) && !userService.isAdmin(loginUser)){
             throw new BusinessException(ErrorCode.NO_AUTH_ERROR);
         }
+        // 补充审核参数
+        pictureService.fillReviewParams(picture,loginUser);
         // save
         boolean result = pictureService.updateById(picture);
         ThrowUtils.throwIf(!result , ErrorCode.OPERATION_ERROR);
@@ -164,5 +182,15 @@ public class PictureController {
         pictureTagCategory.setCategoryList(categoryList);
         return ResultUtil.success(pictureTagCategory);
     }
+
+    @PostMapping("/review")
+    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
+    public BaseResponse<Boolean> doPictureReview(@RequestBody PictureReviewRequest pictureReviewRequest , HttpServletRequest request){
+        ThrowUtils.throwIf(pictureReviewRequest==null , ErrorCode.PARAMS_ERROR);
+        User loginUser = userService.getLoginUser(request);
+        pictureService.doPictureReview(pictureReviewRequest,loginUser);
+        return ResultUtil.success(true);
+    }
+
 
 }

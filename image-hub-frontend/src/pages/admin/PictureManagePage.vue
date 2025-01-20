@@ -16,6 +16,12 @@
         <a-form-item>
             <a-button type="primary" html-type="submit">doSearch</a-button>
         </a-form-item>
+        <a-form-item>
+            <a-select v-model:value="searchParams.reviewStatus" :options="PIC_REVIEW_STATUS_OPTIONS"
+                placeholder="输入审核状态" style="min-width: 180px;"
+            >
+            </a-select>
+        </a-form-item>
     </a-form>
 
     <a-table :columns="columns" :data-source="dataList" :pagination="pagenation" @change="doTableChange">
@@ -44,13 +50,21 @@
                 <div>宽高比：{{ record.picScale }}</div>  
                 <div>大小：{{ (record.picSize / 1024).toFixed(2) }}KB</div>  
             </template>  
-            <template v-else-if="column.dataIndex === 'createTime'">  
+            <template v-if="column.dataIndex === 'createTime'">  
                 {{ dayjs(record.createTime).format('YYYY-MM-DD HH:mm:ss') }}  
             </template>  
-            <template v-else-if="column.dataIndex === 'editTime'">  
+            <template v-if="column.dataIndex === 'editTime'">  
                 {{ dayjs(record.editTime).format('YYYY-MM-DD HH:mm:ss') }}  
             </template> 
-            <template v-else-if="column.key === 'action'">
+            <!-- 审核信息 -->  
+            <template v-if="column.dataIndex === 'reviewMessage'">  
+                <div>审核状态：{{ record.reviewStatus ?? PIC_REVIEW_STATUS_MAP[record.reviewStatus] }}</div>  
+                <div>审核信息：{{ record.reviewMessage }}</div>  
+                <div>审核人：{{ record.reviewerId }}</div>  
+            </template>
+            <template v-if="column.key === 'action'">
+                <a-button v-if="record.reviewStatus !== PIC_REVIEW_STATUS_ENUM.PASS" type="link" @click="handleReview(record, PIC_REVIEW_STATUS_ENUM.PASS)">通过</a-button>
+                <a-button v-if="record.reviewStatus !== PIC_REVIEW_STATUS_ENUM.REJECT" type="link" @click="handleReview(record, PIC_REVIEW_STATUS_ENUM.REJECT)">拒绝</a-button>
                 <a-button danger @click="doDelete">delete</a-button>
                 <a-button type="link" :href="`/edit_picture?id=${record.id}`">edit</a-button>
             </template>
@@ -58,7 +72,8 @@
     </a-table>
 </template>
   <script lang="ts" setup>
-    import { deletePictureUsingPost, listPictureByPageUsingPost } from '@/api/pictureController';
+    import { deletePictureUsingPost, doPictureReviewUsingPost, listPictureByPageUsingPost } from '@/api/pictureController';
+import { PIC_REVIEW_STATUS_ENUM, PIC_REVIEW_STATUS_OPTIONS } from '@/constant/picture';
     import { SmileOutlined } from '@ant-design/icons-vue';
     import { message } from 'ant-design-vue';
     import dayjs from 'dayjs';
@@ -110,7 +125,11 @@
     {  
         title: '操作',  
         key: 'action',  
-    },  
+    }, 
+    {
+        title:'审核信息',
+        dataIndex:'reviewMessage',
+    } 
     ]
 
     // 搜索条件
@@ -168,6 +187,22 @@
         }else{
             message.error('fail to delete')
         }
+    }
+
+    const handleReview = async (record: API.Picture, reviewStatus: number) =>{
+        const reviewMessage = reviewStatus === PIC_REVIEW_STATUS_ENUM.PASS ? '管理员操作通过': '管理员操作拒绝'
+        const res = await  doPictureReviewUsingPost({
+            id:record.id,
+            reviewStatus,
+            reviewMessage,
+        })
+        if (res.data.code === 0) {  
+            message.success('审核操作成功')  
+            // 重新获取列表  
+            fetchData()  
+        } else {  
+            message.error('审核操作失败，' + res.data.message)  
+        }  
     }
 
     onMounted(() => {
