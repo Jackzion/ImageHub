@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.ziio.imagehubbackend.entity.User;
 import com.ziio.imagehubbackend.request.picture.PictureQueryRequest;
 import com.ziio.imagehubbackend.request.picture.PictureReviewRequest;
+import com.ziio.imagehubbackend.request.picture.PictureUploadByBatchRequest;
 import com.ziio.imagehubbackend.request.picture.PictureUploadRequest;
 import com.ziio.imagehubbackend.vo.picutre.PictureVO;
 import org.springframework.web.multipart.MultipartFile;
@@ -22,7 +23,7 @@ public interface PictureService extends IService<Picture> {
     /**
      * 上传图片
      *
-     * @param multipartFile
+     * @param inputSource
      * @param pictureUploadRequest
      * @param loginUser
      * @return
@@ -41,5 +42,7 @@ public interface PictureService extends IService<Picture> {
 
     void doPictureReview(PictureReviewRequest pictureReviewRequest , User loginUser);
 
-    public void fillReviewParams(Picture picture , User loginUser);
+    void fillReviewParams(Picture picture , User loginUser);
+
+    Integer uploadPictureByBatch(PictureUploadByBatchRequest pictureUploadByBatchRequest , User loginUser);
 }

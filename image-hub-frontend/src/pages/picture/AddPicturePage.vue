@@ -2,9 +2,14 @@
 
   <div id = "addPicturePage">
     <h2 style="margin-bottom: 16px;">create Picture</h2>
-    <PictureUpload style="margin: 30px" :picture="picture" :onSuccess="onSuccess"/>
+    <a-tabs v-model:activeKey="uploadType">
+      <a-tab-pane key="file" tab="文件上传"></a-tab-pane>
+        <PictureUpload v-if="uploadType === 'file'" :picture="picture" :onSuccess="onSuccess"/>
+      <a-tab-pane key="url" tab="url 上传">
+        <UrlPictureUpload :picture="picture" :onSuccess="onSuccess"/>
+      </a-tab-pane>
+    </a-tabs>
     <h2 style="margin-bottom: 16px;">please input Picture Info</h2>
-    
     <a-form
       v-if="picture"
       name="pictureForm"
@@ -54,6 +59,7 @@
 <script setup lang="ts">
 import { editPictureUsingPost, listPictureTagCategoryUsingGet } from '@/api/pictureController';
 import PictureUpload from '@/components/picture/PictureUpload.vue';
+import UrlPictureUpload from '@/components/picture/UrlPictureUpload.vue';
 import { message } from 'ant-design-vue';
 import { onMounted, reactive, ref } from 'vue';
 import { useRouter } from 'vue-router';
@@ -112,6 +118,8 @@ const getTagsAndCategorys = async () => {
     message.error('failed' + res.data.message)
   }
 }
+
+const uploadType = ref<'file'|'url'>('file')
 
 onMounted(() => {
   getTagsAndCategorys()

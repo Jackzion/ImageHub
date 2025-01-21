@@ -65,6 +65,15 @@ public class PictureController {
         return ResultUtil.success(pictureVO);
     }
 
+    @PostMapping("/upload/batch")
+    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
+    public BaseResponse<Integer> uploadPictureByBatch(@RequestBody PictureUploadByBatchRequest pictureUploadByBatchRequest , HttpServletRequest request){
+        ThrowUtils.throwIf(pictureUploadByBatchRequest == null , ErrorCode.OPERATION_ERROR);
+        User loginUser = userService.getLoginUser(request);
+        int uploadCount = pictureService.uploadPictureByBatch(pictureUploadByBatchRequest,loginUser);
+        return ResultUtil.success(uploadCount);
+    }
+
     @PostMapping("/delete")
     public BaseResponse<Boolean> deletePicture(@RequestBody DeleteRequest deleteRequest , HttpServletRequest request){
         if(deleteRequest == null || deleteRequest.getId() <= 0){
