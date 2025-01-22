@@ -4,7 +4,6 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.NumberUtil;
-import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.RandomUtil;
 import com.qcloud.cos.model.PutObjectResult;
 import com.qcloud.cos.model.ciModel.persistence.CIObject;
@@ -59,8 +58,12 @@ public abstract class PictureUploadTemplate {
             List<CIObject> objectList = processResults.getObjectList();
             if(CollUtil.isNotEmpty(objectList)){
                 CIObject compressObject = objectList.get(0);
+                CIObject thumbnailObject = compressObject;
+                if(objectList.size() > 1){
+                    thumbnailObject = objectList.get(1);
+                }
                 // 封装压缩图返回结果
-                return buildResult(originFilename,compressObject);
+                return buildResult(originFilename,compressObject,thumbnailObject);
             }
             // 封装原图返回结果
             return buildResult(originFilename,file,uploadPath,imageInfo);
@@ -103,7 +106,7 @@ public abstract class PictureUploadTemplate {
     /**
      * 封装压缩图返回结果
      */
-    private UploadPictureResult buildResult(String originFilename, CIObject compressCiObject) {
+    private UploadPictureResult buildResult(String originFilename, CIObject compressCiObject, CIObject thumbnailObject) {
         UploadPictureResult uploadPictureResult = new UploadPictureResult();
         int picWidth = compressCiObject.getWidth();
         int picHeight = compressCiObject.getHeight();
@@ -115,6 +118,8 @@ public abstract class PictureUploadTemplate {
         uploadPictureResult.setPicFormat(compressCiObject.getFormat());
         uploadPictureResult.setPicSize(compressCiObject.getSize().longValue());
         uploadPictureResult.setUrl(cosClientConfig.getHost() + "/" + compressCiObject.getKey());
+        // 设置缩略图
+        uploadPictureResult.setThumbnailUrl(cosClientConfig.getHost() + "/" + thumbnailObject.getKey());
         return uploadPictureResult;
     }
 

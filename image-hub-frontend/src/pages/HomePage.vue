@@ -39,7 +39,7 @@
                   <img 
                     style="height: 100%; object-fit: cover;"
                     :alt="picture.name"
-                    :src="picture.url"/>
+                    :src="picture.thumbnailUrl ?? picture.url"/>
                   <a-card-meta :title="picture.name">
                     <template #discription>
                       <a-flx>

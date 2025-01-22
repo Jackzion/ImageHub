@@ -91,6 +91,7 @@ public class PictureServiceImpl extends ServiceImpl<PictureMapper, Picture>
         // 持久化
         Picture picture = new Picture();
         picture.setUrl(uploadPictureResult.getUrl());
+        picture.setThumbnailUrl(uploadPictureResult.getThumbnailUrl());
         picture.setName(uploadPictureResult.getPicName());
         if(pictureUploadRequest!=null && StrUtil.isNotBlank(pictureUploadRequest.getPicName())){
             picture.setName(pictureUploadRequest.getPicName());
