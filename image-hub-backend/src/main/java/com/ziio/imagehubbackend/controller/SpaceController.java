@@ -6,6 +6,8 @@ import com.ziio.imagehubbackend.common.BaseResponse;
 import com.ziio.imagehubbackend.common.ResultUtil;
 import com.ziio.imagehubbackend.constant.UserConstant;
 import com.ziio.imagehubbackend.entity.Space;
+import com.ziio.imagehubbackend.entity.SpaceLevel;
+import com.ziio.imagehubbackend.enums.SpaceLevelEnum;
 import com.ziio.imagehubbackend.exception.BusinessException;
 import com.ziio.imagehubbackend.exception.ErrorCode;
 import com.ziio.imagehubbackend.exception.ThrowUtils;
@@ -18,6 +20,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RequestMapping("/space/")
 @RestController
@@ -49,6 +54,20 @@ public class SpaceController {
         return ResultUtil.success(true);
     }
 
-
+    /**
+     * 展示所有空间 Enums
+     * @return
+     */
+    @GetMapping("/list/level")
+    public BaseResponse<List<SpaceLevel>> listSpaceLevel() {
+        List<SpaceLevel> spaceLevelList = Arrays.stream(SpaceLevelEnum.values()) // 获取所有枚举
+                .map(spaceLevelEnum -> new SpaceLevel(
+                        spaceLevelEnum.getValue(),
+                        spaceLevelEnum.getText(),
+                        spaceLevelEnum.getMaxCount(),
+                        spaceLevelEnum.getMaxSize()))
+                .collect(Collectors.toList());
+        return ResultUtil.success(spaceLevelList);
+    }
 
 }
