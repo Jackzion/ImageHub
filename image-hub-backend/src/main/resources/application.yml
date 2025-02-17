@@ -1,7 +1,11 @@
 server:
-  port: 8888
+  port: 8889
   servlet:
     context-path: /api
+  reactive:
+    session:
+      cookie:
+        max-age: 2592000
 spring:
   application:
     name: image-hub-backend
@@ -21,6 +25,9 @@ spring:
     host: 127.0.0.1
     port: 6379
     timeout: 5000
+  session:
+    store-type: redis
+    timeout: 2592000
 mybatis-plus:
   configuration:
     map-underscore-to-camel-case: false

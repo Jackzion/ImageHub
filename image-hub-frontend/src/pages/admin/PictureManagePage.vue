@@ -68,7 +68,7 @@
             <template v-if="column.key === 'action'">
                 <a-button v-if="record.reviewStatus !== PIC_REVIEW_STATUS_ENUM.PASS" type="link" @click="handleReview(record, PIC_REVIEW_STATUS_ENUM.PASS)">通过</a-button>
                 <a-button v-if="record.reviewStatus !== PIC_REVIEW_STATUS_ENUM.REJECT" type="link" @click="handleReview(record, PIC_REVIEW_STATUS_ENUM.REJECT)">拒绝</a-button>
-                <a-button danger @click="doDelete">delete</a-button>
+                <a-button danger @click="doDelete(record.id)">delete</a-button>
                 <a-button type="link" :href="`/edit_picture?id=${record.id}`">edit</a-button>
             </template>
       </template>
@@ -179,7 +179,7 @@ import { PIC_REVIEW_STATUS_ENUM, PIC_REVIEW_STATUS_OPTIONS } from '@/constant/pi
         fetchData()
     }
 
-    const doDelete = async (id : string) => {
+    const doDelete = async (id : number) => {
         if(!id){
             return 
         }

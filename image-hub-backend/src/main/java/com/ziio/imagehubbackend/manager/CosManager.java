@@ -61,4 +61,10 @@ public class CosManager {
         putObjectRequest.setPicOperations(picOperations);
         return cosClient.putObject(putObjectRequest);
     }
+
+    public void deleteObject(String key){
+        cosClient.deleteObject(cosClientConfig.getBucket(), key);
+    }
+
+
 }

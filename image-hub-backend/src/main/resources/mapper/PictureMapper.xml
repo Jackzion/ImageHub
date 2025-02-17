@@ -22,6 +22,7 @@
             <result property="updateTime" column="updateTime" jdbcType="TIMESTAMP"/>
             <result property="isDelete" column="isDelete" jdbcType="TINYINT"/>
             <result property="thumbnailUrl" column="thumbnailUrl" jdbcType="VARCHAR"/>
+            <result property="spaceId" column="spaceId" jdbcType="BIGINT"/>
     </resultMap>
 
     <sql id="Base_Column_List">
@@ -30,6 +31,6 @@
         picSize,picWidth,picHeight,
         picScale,picFormat,userId,
         createTime,editTime,updateTime,
-        isDelete
+        isDelete,spaceId
     </sql>
 </mapper>
