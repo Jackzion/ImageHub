@@ -24,47 +24,23 @@
         </a-checkable-tag>  
       </a-space>
     </div>
-    
-
-    <a-list
-        :grid="{ gutter: 16, xs: 1, sm: 2, md: 3, lg: 4, xl: 5, xxl: 6 }"  
-        :data-source="dataList"
-        :pagenation="pagenation"
-        :loading="loading"
-    >
-        <template #renderItem="{item:picture}">
-            <a-list-item style="padding: 0%;">
-              <a-card hoverable @click="doClickPicture(picture)">
-                <template #cover>
-                  <img 
-                    style="height: 100%; object-fit: cover;"
-                    :alt="picture.name"
-                    :src="picture.thumbnailUrl ?? picture.url"/>
-                  <a-card-meta :title="picture.name">
-                    <template #discription>
-                      <a-flx>
-                        <a-tag color="green">
-                          {{ picture.category ?? "default" }}
-                        </a-tag>
-                        <a-tag v-for="tag in picture.tags" :key="tag">
-                          {{ tag }}
-                        </a-tag>
-                      </a-flx>
-                    </template>
-                  </a-card-meta>
-                    
-                </template>
-              </a-card>
-            </a-list-item>
-        </template>
-
-    </a-list>
+        
+    <!-- 图片列表 -->
+    <PictureList :dataList="dataList" :loading="loading" style="margin-top: 20px;"/>
+    <!-- 补充分页组件 -->
+    <a-pagination
+      style="text-align: right"
+      v-model:current="searchParams.current"
+      v-model:pageSize="searchParams.pageSize"
+      :total="total"
+      @change="fetchData()"
+    />
   </template>
   <script lang="ts" setup>
   import { listPictureTagCategoryUsingGet, listPictureVoByPageUsingPost } from '@/api/pictureController';
-  import router from '@/router';
+  import PictureList from '@/components/picture/PictureList.vue';
   import { message } from 'ant-design-vue';
-  import { computed, onMounted, reactive, ref } from 'vue';
+  import { onMounted, reactive, ref } from 'vue';
   const dataList = ref<API.PictureVO[]>()
   const total = ref(0)
   const loading = ref(true)
@@ -74,19 +50,6 @@
     pageSize:12,
     sortField:'createTime',
     sortOrder:'descend'
-  })
-
-  const pagenation = computed(()=>{
-    return{
-        current: searchParams.current ?? 1,  
-        pageSize: searchParams.pageSize ?? 10,  
-        total: total.value,  
-        onChange:(page,pageSize) => {
-            searchParams.current = page
-            searchParams.pageSize = pageSize
-            fetchData()
-        }
-    }
   })
 
   const fetchData = async () =>{
@@ -133,12 +96,6 @@
     }else{
       message.error('fail to get tags and category')
     }
-  }
-
-  const doClickPicture = (picture:API.PictureVO) =>{
-    router.push({
-      path:`/picture/${picture.id}`
-    })
   }
 
   onMounted(() =>{

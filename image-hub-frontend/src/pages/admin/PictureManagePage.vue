@@ -158,7 +158,8 @@ import { PIC_REVIEW_STATUS_ENUM, PIC_REVIEW_STATUS_OPTIONS } from '@/constant/pi
 
     const fetchData = async () => {
         const res = await listPictureByPageUsingPost({
-            ...searchParams
+            ...searchParams,
+            nullSpaceId:true
         })
         if(res.data.data){
             dataList.value = res.data.data.records ?? []

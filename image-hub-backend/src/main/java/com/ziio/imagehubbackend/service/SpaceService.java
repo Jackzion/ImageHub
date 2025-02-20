@@ -1,9 +1,11 @@
 package com.ziio.imagehubbackend.service;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.ziio.imagehubbackend.entity.Space;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.ziio.imagehubbackend.entity.User;
 import com.ziio.imagehubbackend.request.space.SpaceAddRequest;
+import com.ziio.imagehubbackend.request.space.SpaceQueryRequest;
 
 /**
 * @author Ziio
@@ -32,4 +34,11 @@ public interface SpaceService extends IService<Space> {
      * @return
      */
     long addSpace(SpaceAddRequest spaceAddRequest, User loginUser);
+
+    /**
+     * request to queryWrapper
+     * @param spaceQueryRequest
+     * @return
+     */
+    QueryWrapper<Space> getQueryWrapper(SpaceQueryRequest spaceQueryRequest);
 }

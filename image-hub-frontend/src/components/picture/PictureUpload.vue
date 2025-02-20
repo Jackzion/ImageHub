@@ -13,15 +13,17 @@
             <div class="ant-upload-text">点击或拖拽上传图片</div>  
         </div>  
       </a-upload>
-
+      <div v-if="spaceId">將保存到 {{ spaceId }} 號私人空間</div>
     </div>
   </template>
-  <script lang="ts" setup>
-  import { ref } from 'vue';
+<script lang="ts" setup>
+  import { computed, ref } from 'vue';
   import { message, type UploadProps } from 'ant-design-vue';
-import { uploadPictureUsingPost } from '@/api/pictureController';
+  import { uploadPictureUsingPost } from '@/api/pictureController';
+  import { useRoute } from 'vue-router';
   interface Props{
     picture?:API.PictureVO,
+    spaceId?: number,
     onSuccess?:(newPicture:API.PictureVO)=> void
   }
 
@@ -44,14 +46,15 @@ import { uploadPictureUsingPost } from '@/api/pictureController';
         return isJpgOrPng && isLt2M
   }
 
-  /**
+  /*
    * 上传
    * @param param0 
    */
   const handleUpload = async ({file} : any) => {
     loading.value = true
     try{
-        const param = props.picture ? {id:props.picture.id}:{}
+        const param:API.uploadPictureUsingPOSTParams = props.picture ? {id:props.picture.id}:{}
+        param.spaceId=props.spaceId
         const res = await uploadPictureUsingPost(param,{},file)
         if(res.data.code === 0 && res.data.data){
             message.success('success')

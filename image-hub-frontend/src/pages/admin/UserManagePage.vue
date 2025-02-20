@@ -50,7 +50,6 @@
     import { message } from 'ant-design-vue';
     import { computed, onMounted, reactive, ref } from 'vue';
     import dayjs from 'dayjs';
-import { commentProps } from 'ant-design-vue/es/comment';
   const columns = [
     {
         title: 'id',

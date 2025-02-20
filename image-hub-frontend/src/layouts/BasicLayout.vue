@@ -1,50 +1,59 @@
 <template>
-    <div class="basicLayout">
+  <div id="basicLayout">
+    <a-layout style="min-height: 100vh">
       <a-layout-header class="header">
-        <GlobalHeader/>
+        <GlobalHeader />
       </a-layout-header>
-
-      <a-layout-content style="  
-            margin-top: 20px;
-            margin-bottom: 28px;
-            padding: 20px;">
-        <h1>content</h1>
-        <router-view />
-      </a-layout-content>
-
-      <a-layout-footer 
-            style="    
-                background: #efefef;
-                padding: 16px;
-                position: fixed;
-                bottom: 0;
-                left: 0;
-                right: 0;
-                text-align: center;">
-        Ant Design ©2018 Created by Ant UED
+      <a-layout>
+        <GlobalSider class="sider" />
+        <a-layout-content class="content">
+          <router-view />
+        </a-layout-content>
+      </a-layout>
+      <a-layout-footer class="footer">
+        <a href="https://www.codefather.cn" target="_blank"> 编程导航 by 程序员鱼皮 </a>
       </a-layout-footer>
-    </div>
-  </template>
-  <script lang="ts" setup>
-  import GlobalHeader from "@/components/GlobalHeader.vue";
-  </script>
-  <style scoped>
-  .site-layout-content {
-    min-height: 280px;
-    padding: 24px;
-    background: #fff;
-  }
+    </a-layout>
+  </div>
+</template>
 
-  .ant-row-rtl #components-layout-demo-top .logo {
-    float: right;
-    margin: 16px 0 16px 24px;
-  }
+<script setup lang="ts">
+import GlobalHeader from '@/components/GlobalHeader.vue'
+import GlobalSider from "@/components/GlobalSider.vue";
+</script>
 
-  #basicLayout .header {
+<style scoped>
+#basicLayout .header {
   padding-inline: 20px;
-  margin-bottom: 16px;
-  color: unset;
   background: white;
+  color: unset;
+  margin-bottom: 1px;
 }
-  </style>
-  
+
+#basicLayout .sider {
+  background: #fff;
+  border-right: 0.5px solid #eee;
+  padding-top: 20px;
+}
+
+#basicLayout :deep(.ant-menu-root) {
+  border-bottom: none !important;
+  border-inline-end: none !important;
+}
+
+#basicLayout .content {
+  padding: 28px;
+  background: linear-gradient(to right, #fefefe, #fff);
+  margin-bottom: 28px;
+}
+
+#basicLayout .footer {
+  background: #efefef;
+  padding: 16px;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  text-align: center;
+}
+</style>

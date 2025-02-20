@@ -12,6 +12,14 @@
                     </div>
                 </RouterLink>
             </a-col>
+            <!-- <a-col flex="200px">
+                <a-menu-item>
+                    <router-link to="/my_space">
+                        <UserOutlined />
+                        我的空间
+                    </router-link>
+                </a-menu-item>
+            </a-col> -->
             <a-col flex="auto">
                     <a-menu v-model:selectedKeys="current" mode="horizontal" :items="items" @click = "doMenuClick" />
             </a-col>
@@ -51,6 +59,11 @@ const items = ref<MenuProps['items']>([
     icon: () => h(MailOutlined),
     label: 'Index',
     title: 'Index',
+},
+{
+  key: '/admin/spaceManage',
+  label: '空间管理',
+  title: '空间管理',
 },
 {
     key: '/about',

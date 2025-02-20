@@ -1,7 +1,9 @@
 package com.ziio.imagehubbackend.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ziio.imagehubbackend.entity.Space;
 import com.ziio.imagehubbackend.entity.User;
@@ -10,6 +12,8 @@ import com.ziio.imagehubbackend.exception.BusinessException;
 import com.ziio.imagehubbackend.exception.ErrorCode;
 import com.ziio.imagehubbackend.exception.ThrowUtils;
 import com.ziio.imagehubbackend.request.space.SpaceAddRequest;
+import com.ziio.imagehubbackend.request.space.SpaceQueryRequest;
+import com.ziio.imagehubbackend.request.user.UserQueryRequest;
 import com.ziio.imagehubbackend.service.SpaceService;
 import com.ziio.imagehubbackend.mapper.SpaceMapper;
 import com.ziio.imagehubbackend.service.UserService;
@@ -119,6 +123,25 @@ public class SpaceServiceImpl extends ServiceImpl<SpaceMapper, Space>
                 lockMap.remove(userId);
             }
         }
+    }
+
+    @Override
+    public QueryWrapper<Space> getQueryWrapper(SpaceQueryRequest spaceQueryRequest) {
+        if(spaceQueryRequest == null) throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        Long id = spaceQueryRequest.getId();
+        Long userId = spaceQueryRequest.getUserId();
+        Integer spaceLevel = spaceQueryRequest.getSpaceLevel();
+        String spaceName = spaceQueryRequest.getSpaceName();
+        String sortField = spaceQueryRequest.getSortField();
+        String sortOrder = spaceQueryRequest.getSortOrder();
+
+        QueryWrapper<Space> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq(ObjectUtil.isNotNull(id),"id",id);
+        queryWrapper.eq(ObjectUtil.isNotNull(userId),"userId",userId);
+        queryWrapper.eq(ObjectUtil.isNotNull(spaceLevel),"spaceLevel",spaceLevel);
+        queryWrapper.like(StrUtil.isNotBlank(spaceName),"spaceName",spaceName);
+        queryWrapper.orderBy(StrUtil.isNotBlank(sortField),sortOrder.equals("ascend"),sortField);
+        return queryWrapper;
     }
 }
 

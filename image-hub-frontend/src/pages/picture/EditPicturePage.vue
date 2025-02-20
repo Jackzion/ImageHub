@@ -46,6 +46,9 @@
         <a-button type="primary" html-type="submit" style="width: 100%">创建</a-button>
       </a-form-item>
     </a-form>
+    <a-typography-paragraph v-if="spaceId" type="secondary">
+      保存至空间：<a :href="`/space/${spaceId}`" target="_blank">{{ spaceId }}</a>
+    </a-typography-paragraph>
   </div>
 
 </template>
@@ -53,7 +56,7 @@
 <script setup lang="ts">
 import { editPictureUsingPost, getPictureVoByIdUsingGet, listPictureTagCategoryUsingGet } from '@/api/pictureController';
 import { message } from 'ant-design-vue';
-import { onMounted, reactive, ref } from 'vue';
+import { computed, onMounted, reactive, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
 const router = useRouter()
@@ -78,13 +81,22 @@ const getOldPicture = async () => {
   }
 }
 
+// 空间 id
+const spaceId = computed(() => {
+  return route.query?.spaceId
+})
+
+// todo:spaceId 可能为 undefined
+
 const onFinish = async (values:any) => {
   const pictureId = picture.value?.id
   if(!pictureId){
     return
   }
+  // 保存图片信息
   const res = await editPictureUsingPost({
     id:pictureId,
+    spaceId:spaceId.value,
     ...values
   })
   if(res.data.code === 0 && res.data.data){

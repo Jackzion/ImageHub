@@ -10,13 +10,14 @@
 
 <script setup lang="ts">
   import { uploadPictureByUrlUsingPost } from '@/api/pictureController';
-  import { message } from 'ant-design-vue';
+  import { message, Space } from 'ant-design-vue';
   import { ref } from 'vue';
   const loading = ref<boolean>(false)
   const fileUrl = ref<string>('')
   interface Props{
     picture?:API.PictureVO,
-    onSuccess?:(newPicture:API.PictureVO)=> void
+    onSuccess?:(newPicture:API.PictureVO)=> void,
+    spaceId?:number
   }
   const props = defineProps<Props>()
 
@@ -25,7 +26,8 @@
     try{
         const params:API.uploadPictureByUrlUsingPOSTParams = {fileUrl:fileUrl.value}
         if(props.picture){
-          params.id = props.picture.id
+          params.id = props.picture.id,
+          params.spaceId = props.spaceId
         }
         const res = await uploadPictureByUrlUsingPost(params)
         if(res.data.code === 0 && res.data.data){
