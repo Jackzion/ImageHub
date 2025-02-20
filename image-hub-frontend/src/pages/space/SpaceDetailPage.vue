@@ -17,6 +17,8 @@
       </a-tooltip>
     </a-space>
   </a-flex>
+  <!-- 搜索表单 -->
+  <PictureSearchForm :onSearch="onSearch" />
   <!-- 图片列表 -->
   <PictureList :dataList="dataList" :loading="loading" :onReload="fetchData" showOp />
   <!-- 分页组件 -->
@@ -34,8 +36,9 @@
 import { listPictureVoByPageUsingPost } from '@/api/pictureController';
 import { getSpaceVoByIdUsingGet } from '@/api/spaceController';
 import PictureList from '@/components/picture/PictureList.vue';
+import PictureSearchForm from '@/components/picture/PictureSearchForm.vue';
 import { message } from 'ant-design-vue';
-import { computed, onMounted, reactive, ref } from 'vue';
+import { onMounted, ref } from 'vue';
 
 const props = defineProps<{
   id:string | number
@@ -57,6 +60,7 @@ const fetchSpaceDetail = async () => {
     message .error('获取空间详情失败：' + e.message)
   }
 }
+
 onMounted(() => {
   fetchSpaceDetail()
   fetchData()
@@ -68,7 +72,7 @@ const total = ref(0)
 const loading = ref(true)
 
 // 搜索条件
-const searchParams = reactive<API.PictureQueryRequest>({
+const searchParams = ref<API.PictureQueryRequest>({
   current: 1,
   pageSize: 12,
   sortField: 'createTime',
@@ -76,8 +80,8 @@ const searchParams = reactive<API.PictureQueryRequest>({
 })
 // 分页参数
 const onPageChange = (page, pageSize) => {
-  searchParams.current = page
-  searchParams.pageSize = pageSize
+  searchParams.value.current = page
+  searchParams.value.pageSize = pageSize
   fetchData()
 }
 
@@ -87,7 +91,7 @@ const fetchData = async () => {
   // 转换搜索参数
   const params = {
     spaceId: props.id,
-    ...searchParams,
+    ...searchParams.value,
   }
   const res = await listPictureVoByPageUsingPost(params)
   if (res.data.data) {
@@ -97,6 +101,16 @@ const fetchData = async () => {
     message.error('获取数据失败，' + res.data.message)
   }
   loading.value = false
+}
+
+// 搜索
+const onSearch = (newSearchParams:API.PictureQueryRequest) => {
+  searchParams.value = {
+    ...searchParams.value,
+    ...newSearchParams,
+    current:1,
+  }
+  fetchData()
 }
 
 </script>
