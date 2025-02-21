@@ -31,6 +31,10 @@
               </template>
             </a-card-meta>
             <template v-if="showOp" #actions>
+              <a-space @click="e => doSearch(picture, e)">
+                <search-outlined />
+                  搜索
+              </a-space>
               <a-space @click="e => doEdit(picture, e)">
                 <edit-outlined />
                   编辑
@@ -78,7 +82,7 @@ const doEdit = (picture, e) => {
 }
 
 // 删除
-const doDelete = async (picture, e) => {
+const doDelete = async (picture:API.PictureVO, e) => {
   e.stopPropagation()
   const id = picture.id
   if (!id) {
@@ -96,10 +100,16 @@ const doDelete = async (picture, e) => {
 
 // 跳转至图片详情
 const router = useRouter()
-const doClickPicture = (picture) => {
+const doClickPicture = (picture:API.PictureVO) => {
   router.push({
     path: `/picture/${picture.id}`,
   })
+}
+
+// 搜索
+const doSearch = (picture:API.PictureVO, e) => {
+  e.stopPropagation()
+  window.open(`/search_picture?pictureId=${picture.id}`)
 }
 </script>
 

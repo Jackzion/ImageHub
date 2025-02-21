@@ -8,7 +8,7 @@ import vueDevTools from 'vite-plugin-vue-devtools'
 export default defineConfig({
   server: {
     proxy: {
-      '/api': 'http://localhost:8889',
+      '/api': 'http://localhost:8808',
     }
   },
   plugins: [
