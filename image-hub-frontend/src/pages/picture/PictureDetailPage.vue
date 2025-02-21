@@ -44,6 +44,19 @@
           <a-descriptions-item label="大小">  
             {{ formatSize(picture.picSize) }}  
           </a-descriptions-item>  
+          <a-descriptions-item label="主色调">
+            <a-space>
+              {{ picture.picColor ?? '-' }}
+              <div
+                v-if="picture.picColor"
+                :style="{
+                  backgroundColor: toHexColor(picture.picColor),
+                  width: '16px',
+                  height: '16px',
+                }"
+              />
+            </a-space>
+          </a-descriptions-item>
         </a-descriptions>
 
         <a-space wrap>
@@ -127,6 +140,7 @@ import { computed, onMounted, ref } from 'vue';
   const doDownload = () =>{
     downloadImage(picture.value.url) 
   }
+
 
   
 

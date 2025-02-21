@@ -19,6 +19,10 @@
   </a-flex>
   <!-- 搜索表单 -->
   <PictureSearchForm :onSearch="onSearch" />
+  <!-- 按颜色搜索 -->
+  <a-form-item label="按颜色搜索" style="margin-top: 16px">
+    <color-picker format="hex" @pureColorChange="onColorChange" />
+  </a-form-item>
   <!-- 图片列表 -->
   <PictureList :dataList="dataList" :loading="loading" :onReload="fetchData" showOp />
   <!-- 分页组件 -->
@@ -33,7 +37,7 @@
 </template>
 
 <script lang="ts" setup>
-import { listPictureVoByPageUsingPost } from '@/api/pictureController';
+import { listPictureVoByPageUsingPost, searchPictureByColorUsingPost } from '@/api/pictureController';
 import { getSpaceVoByIdUsingGet } from '@/api/spaceController';
 import PictureList from '@/components/picture/PictureList.vue';
 import PictureSearchForm from '@/components/picture/PictureSearchForm.vue';
@@ -111,6 +115,22 @@ const onSearch = (newSearchParams:API.PictureQueryRequest) => {
     current:1,
   }
   fetchData()
+}
+
+// 按颜色搜索
+const onColorChange = async (color:string){
+  const res = await searchPictureByColorUsingPost({
+    picColor: color,
+    spaceId:space.value.id,
+  })
+  // 更新 dataList
+  if (res.data.code === 0 && res.data.data) {
+    const data = res.data.data ?? [];
+    dataList.value = data;
+    total.value = data.length;
+  } else {
+    message.error('获取数据失败，' + res.data.message)
+  }
 }
 
 </script>

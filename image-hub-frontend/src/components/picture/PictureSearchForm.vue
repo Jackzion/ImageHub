@@ -58,6 +58,10 @@
           <a-button type="primary" html-type="submit" style="width: 96px;margin-right: 20px;">搜索</a-button>
           <a-button html-type="reset" @click="doClear" style="width: 96px;">重置</a-button>
         </a-form-item>
+        <!-- 按颜色搜索 -->
+        <a-form-item label="按颜色搜索" style="margin-top: 16px">
+          <color-picker format="hex" @pureColorChange="onColorChange" />
+        </a-form-item>
     </a-form>
     </div>
 </template>
