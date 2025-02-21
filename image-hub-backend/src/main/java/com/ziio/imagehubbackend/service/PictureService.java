@@ -10,6 +10,7 @@ import com.ziio.imagehubbackend.vo.picutre.PictureVO;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
 * @author Ziio
@@ -100,5 +101,20 @@ public interface PictureService extends IService<Picture> {
      */
     void deletePicture(Long id, User loginUser);
 
+    /**
+     *
+     * 编辑图片
+     * @param pictureEditRequest
+     * @param loginUser
+     */
     void editPicture(PictureEditRequest pictureEditRequest, User loginUser);
+
+    /**
+     * 根据颜色搜索图片
+     * @param spaceId
+     * @param picColor
+     * @param loginUser
+     * @return
+     */
+    List<PictureVO> searchPictureByColor(Long spaceId, String picColor, User loginUser);
 }
