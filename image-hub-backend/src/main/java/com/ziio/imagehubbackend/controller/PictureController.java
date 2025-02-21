@@ -282,4 +282,12 @@ public class PictureController {
         List<PictureVO> result = pictureService.searchPictureByColor(spaceId, picColor, loginUser);
         return ResultUtil.success(result);
     }
+
+    @PostMapping("/edit/batch")
+    public BaseResponse<Boolean> editPictureByBatch(@RequestBody PictureEditByBatchRequest pictureEditByBatchRequest , HttpServletRequest request){
+        ThrowUtils.throwIf(pictureEditByBatchRequest == null, ErrorCode.PARAMS_ERROR);
+        User loginUser = userService.getLoginUser(request);
+        pictureService.editPictureByBatch(pictureEditByBatchRequest,loginUser);
+        return ResultUtil.success(true);
+    }
 }

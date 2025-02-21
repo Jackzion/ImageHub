@@ -6,6 +6,7 @@
       <a-button type="primary" :href="`/add_picture?spaceId=${id}`" target="_blank">
         + 创建图片
       </a-button>
+      <a-button :icon="h(EditOutlined)" @click="doBatchEdit"> 批量编辑</a-button>
       <a-tooltip
         :title="`占用空间 ${space.totalSize} / ${space.maxSize}`"
       >
@@ -33,6 +34,12 @@
     :total="total"
     :show-total="() => `图片总数 ${total} / ${space.maxCount}`"
     @change="onPageChange"
+  />
+  <BatchEditPictureModal
+    ref="batchEditPictureModalRef"
+    :spaceId="id"
+    :pictureList="dataList"
+    :onSuccess="onBatchEditPictureSuccess"
   />
 </template>
 
@@ -130,6 +137,21 @@ const onColorChange = async (color:string){
     total.value = data.length;
   } else {
     message.error('获取数据失败，' + res.data.message)
+  }
+}
+
+// 批量编辑弹窗引用
+const batchEditPictureModalRef = ref()
+
+// 批量编辑成功后，刷新数据
+const onBatchEditPictureSuccess = () => {
+  fetchData()
+}
+
+// 打开批量编辑弹窗
+const doBatchEdit = () => {
+  if (batchEditPictureModalRef.value) {
+    batchEditPictureModalRef.value.openModal()
   }
 }
 
