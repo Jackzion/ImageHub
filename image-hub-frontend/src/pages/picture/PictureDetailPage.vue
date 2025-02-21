@@ -69,10 +69,17 @@
           <a-button type="primary" @click="doDownload">
             Download
           </a-button>
+          <a-button type="primary" ghost @click="doShare">
+            分享
+            <template #icon>
+              <share-alt-outlined />
+            </template>
+          </a-button>
         </a-space>
       </a-card>
     </a-col>
   </a-row>
+  <ShareModal ref="shareModalRef" :link="shareLink" />
 </template>
 
 <script setup lang="ts">
@@ -141,8 +148,18 @@ import { computed, onMounted, ref } from 'vue';
     downloadImage(picture.value.url) 
   }
 
-
-  
+  // 分享弹窗引用
+  const shareModalRef = ref()
+  // 分享链接
+  const shareLink = ref<string>()
+  // 分享
+  const doShare = (picture:API.PictureVO, e:Event) => {
+    e.stopPropagation()
+    shareLink.value = `${window.location.protocol}//${window.location.host}/picture/${picture.id}`
+    if(shareModalRef.value){
+      shareModalRef.value.showModal()
+    }
+  }
 
   onMounted(()=>{
     console.log('组件已挂载');
