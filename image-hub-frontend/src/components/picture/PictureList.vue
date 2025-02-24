@@ -31,10 +31,10 @@
               </template>
             </a-card-meta>
             <template v-if="showOp" #actions>
-              <search-outlined @click="(e) => doSearch(picture, e)" />
-              <share-alt-outlined @click="(e) => doShare(picture, e)" />
-              <edit-outlined @click="(e) => doEdit(picture, e)" />
-              <delete-outlined @click="(e) => doDelete(picture, e)" />
+              <SearchOutlined @click="(e) => doSearch(picture, e)" />
+              <ShareAltOutlined @click="(e) => doShare(picture, e)" />
+              <EditOutlined @click="(e) => doEdit(picture, e)" />
+              <DeleteOutlined @click="(e) => doDelete(picture, e)" />
             </template>
           </a-card>
         </a-list-item>
@@ -45,10 +45,18 @@
 </template>
 
 <script setup lang="ts">
+// 在<script setup>顶部添加：
+import {
+  SearchOutlined,
+  ShareAltOutlined,
+  EditOutlined,
+  DeleteOutlined
+} from '@ant-design/icons-vue'
 import { deletePictureUsingPost } from '@/api/pictureController';
 import { message } from 'ant-design-vue';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router'
+import ShareModal from '../ShareModal.vue';
 
 interface Props {
   dataList?: API.PictureVO[]
@@ -114,7 +122,7 @@ const doShare = (picture:API.PictureVO, e:Event) => {
   e.stopPropagation()
   shareLink.value = `${window.location.protocol}//${window.location.host}/picture/${picture.id}`
   if(shareModalRef.value){
-    shareModalRef.value.showModal()
+    shareModalRef.value.openModal()
   }
 }
 

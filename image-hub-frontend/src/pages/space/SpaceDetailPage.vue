@@ -49,7 +49,10 @@ import { getSpaceVoByIdUsingGet } from '@/api/spaceController';
 import PictureList from '@/components/picture/PictureList.vue';
 import PictureSearchForm from '@/components/picture/PictureSearchForm.vue';
 import { message } from 'ant-design-vue';
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, h } from 'vue';
+import { ColorPicker } from 'vue3-colorpicker';
+// 2. 添加样式导入（必须）
+import 'vue3-colorpicker/style.css'
 
 const props = defineProps<{
   id:string | number
@@ -125,7 +128,7 @@ const onSearch = (newSearchParams:API.PictureQueryRequest) => {
 }
 
 // 按颜色搜索
-const onColorChange = async (color:string){
+const onColorChange = async (color:string) => {
   const res = await searchPictureByColorUsingPost({
     picColor: color,
     spaceId:space.value.id,
@@ -133,7 +136,7 @@ const onColorChange = async (color:string){
   // 更新 dataList
   if (res.data.code === 0 && res.data.data) {
     const data = res.data.data ?? [];
-    dataList.value = data;
+    dataList.value = data;  
     total.value = data.length;
   } else {
     message.error('获取数据失败，' + res.data.message)

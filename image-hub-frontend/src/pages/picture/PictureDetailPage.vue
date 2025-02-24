@@ -84,9 +84,10 @@
 
 <script setup lang="ts">
 import { deletePictureUsingPost, getPictureVoByIdUsingGet } from '@/api/pictureController';
+import ShareModal from '@/components/ShareModal.vue';
 import router from '@/router';
 import { useLoginUserStore } from '@/store/user';
-import { downloadImage } from '@/util';
+import { downloadImage, toHexColor } from '@/util';
 import { message } from 'ant-design-vue';
 import { computed, onMounted, ref } from 'vue';
 
@@ -153,11 +154,11 @@ import { computed, onMounted, ref } from 'vue';
   // 分享链接
   const shareLink = ref<string>()
   // 分享
-  const doShare = (picture:API.PictureVO, e:Event) => {
+  const doShare = (e:Event) => {
     e.stopPropagation()
-    shareLink.value = `${window.location.protocol}//${window.location.host}/picture/${picture.id}`
+    shareLink.value = `${window.location.protocol}//${window.location.host}/picture/${picture.value.id}`
     if(shareModalRef.value){
-      shareModalRef.value.showModal()
+      shareModalRef.value.openModal()
     }
   }
 

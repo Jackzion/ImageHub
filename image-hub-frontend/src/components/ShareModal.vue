@@ -26,7 +26,7 @@ interface Props {
  */
 const props = withDefaults(defineProps<Props>(), {
   title: () => '分享',
-  link: () => 'https://laoyujianli.com/share/yupi',
+  link: () => 'https://jackzion.github.io/',
 })
 
 const visible = ref(false)
