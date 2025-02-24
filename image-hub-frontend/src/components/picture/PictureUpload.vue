@@ -17,10 +17,9 @@
     </div>
   </template>
 <script lang="ts" setup>
-  import { computed, ref } from 'vue';
-  import { message, type UploadProps } from 'ant-design-vue';
-  import { uploadPictureUsingPost } from '@/api/pictureController';
-  import { useRoute } from 'vue-router';
+import { uploadPictureUsingPost } from '@/api/pictureController';
+import { message, type UploadProps } from 'ant-design-vue';
+import { h, ref } from 'vue';
   interface Props{
     picture?:API.PictureVO,
     spaceId?: number,

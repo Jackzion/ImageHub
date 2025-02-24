@@ -9,6 +9,18 @@
         <UrlPictureUpload :picture="picture" :onSuccess="onSuccess" :spaceId="spaceId"/>
       </a-tab-pane>
     </a-tabs>
+
+    <div v-if="picture" class="edit-bar">
+      <a-button :icon="h(EditOutlined)" @click="doEditPicture">编辑图片</a-button>
+      <ImageCropper
+        ref="imageCropperRef"
+        :imageUrl="picture?.url"
+        :picture="picture"
+        :spaceId="spaceId"
+        :onSuccess="onCropSuccess"
+      />
+    </div>
+
     <h2 style="margin-bottom: 16px;">please input Picture Info</h2>
     <a-form
       v-if="picture"
@@ -62,7 +74,10 @@ import { editPictureUsingPost, listPictureTagCategoryUsingGet } from '@/api/pict
 import PictureUpload from '@/components/picture/PictureUpload.vue';
 import UrlPictureUpload from '@/components/picture/UrlPictureUpload.vue';
 import { message } from 'ant-design-vue';
-import { onMounted, reactive, ref } from 'vue';
+import {
+  EditOutlined
+} from '@ant-design/icons-vue';
+import { h, onMounted, reactive, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
 const router = useRouter()
@@ -129,13 +144,27 @@ onMounted(() => {
   getTagsAndCategorys()
 })
 
+  // 图片编辑弹窗引用
+  const imageCropperRef = ref()
+
+  // 编辑图片
+  const doEditPicture = () => {
+    if (imageCropperRef.value) {
+      imageCropperRef.value.openModal()
+    }
+  }
+
+  // 编辑成功事件
+  const onCropSuccess = (newPicture: API.PictureVO) => {
+    picture.value = newPicture
+  }
 
 </script>
 
 <style scoped>
   #addPicturePage {
-    max-width: 720px;
-    margin: 0 auto;
+    text-align: center;
+    margin: 16px 0;
   }
 
   #addPicturePage .edit-bar {
