@@ -2,6 +2,7 @@ package com.ziio.imagehubbackend.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.ziio.imagehubbackend.api.aliyunai.model.CreateOutPaintingTaskResponse;
 import com.ziio.imagehubbackend.entity.Picture;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.ziio.imagehubbackend.entity.User;
@@ -124,4 +125,12 @@ public interface PictureService extends IService<Picture> {
      * @param loginUser
      */
     void editPictureByBatch(PictureEditByBatchRequest pictureEditByBatchRequest, User loginUser);
+
+    /**
+     * 创建图片任务
+     * @param createPictureOutPaintingTaskRequest
+     * @param loginUser
+     * @return
+     */
+    CreateOutPaintingTaskResponse createPictureOutPaintingTask(CreatePictureOutPaintingTaskRequest createPictureOutPaintingTaskRequest, User loginUser);
 }
