@@ -73,7 +73,7 @@ import { ref } from 'vue'
     })
   }
 
-  const handleUpload = async({file:any}) =>{
+  const handleUpload = async({file}:any) =>{
     loading.value = true
     try{
         const params: API.uploadPictureUsingPOSTParams = props.picture ? { id: props.picture.id } : {}

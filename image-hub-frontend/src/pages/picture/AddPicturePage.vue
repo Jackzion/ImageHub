@@ -12,10 +12,10 @@
 
     <div v-if="picture" class="edit-bar">
       <a-button :icon="h(EditOutlined)" @click="doEditPicture">编辑图片</a-button>
-      <a-button type="primary" ghost :icon="h(FullscreenOutlined)" @click="doImagePainting">
+      <a-button type="primary" ghost :icon="h(FullscreenExitOutlined)" @click="doImagePainting">
         AI 扩图
       </a-button>
-      <ImageOutPainting
+      <ImageOutPaintingModal
         ref="imageOutPaintingRef"
         :picture="picture"
         :spaceId="spaceId"
@@ -84,10 +84,13 @@ import PictureUpload from '@/components/picture/PictureUpload.vue';
 import UrlPictureUpload from '@/components/picture/UrlPictureUpload.vue';
 import { message } from 'ant-design-vue';
 import {
-  EditOutlined
+  EditOutlined,
+  FullscreenExitOutlined
 } from '@ant-design/icons-vue';
 import { h, onMounted, reactive, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+import ImageCropper from '@/components/picture/ImageCropper.vue';
+import ImageOutPaintingModal from '@/components/picture/ImageOutPaintingModal.vue';
 
 const router = useRouter()
 const route = useRoute()

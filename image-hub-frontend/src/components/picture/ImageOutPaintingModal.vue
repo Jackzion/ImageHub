@@ -100,27 +100,27 @@
                     taskId: taskId.value,
                 })
                 if (res.data.code === 0 && res.data.data) {
-                    const taskResult = res.data.data
-                    if (res.data.data.taskStatus  === 'SUCCEEDED') {
+                    const taskResult = res.data.data.output
+                    if (taskResult.taskStatus  === 'SUCCEEDED') {
                         message.success('扩图任务成功')
-                        resultImageUrl.value = taskResult.output?.outputImageUrl
+                        resultImageUrl.value = taskResult?.outputImageUrl
                         clearPolling()
                     }else if (taskResult.taskStatus === 'FAILED') {
-                        message.error('扩图任务失败')
+                        message.error('扩图任务失败' + error.message)
                         clearPolling()
-                        }
+                    }
                 }
             }catch(error) {
                 console.error('轮询任务状态失败', error)
                 message.error('检测任务状态失败，请稍后重试')
                 clearPolling()
             }
-    })
+    },3000)
 }
 
     // 清理定时器，避免内存泄漏
     onUnmounted(() => {
-    clearPolling()
+        clearPolling()
     })
 
     // 清理轮询定时器
