@@ -5,22 +5,27 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.ziio.imagehubbackend.entity.Picture;
 import com.ziio.imagehubbackend.entity.Space;
 import com.ziio.imagehubbackend.entity.User;
 import com.ziio.imagehubbackend.enums.SpaceLevelEnum;
+import com.ziio.imagehubbackend.enums.UserRoleEnum;
 import com.ziio.imagehubbackend.exception.BusinessException;
 import com.ziio.imagehubbackend.exception.ErrorCode;
 import com.ziio.imagehubbackend.exception.ThrowUtils;
 import com.ziio.imagehubbackend.request.space.SpaceAddRequest;
 import com.ziio.imagehubbackend.request.space.SpaceQueryRequest;
+import com.ziio.imagehubbackend.request.space.analyze.SpaceSizeAnalyzeRequest;
 import com.ziio.imagehubbackend.request.user.UserQueryRequest;
 import com.ziio.imagehubbackend.service.SpaceService;
 import com.ziio.imagehubbackend.mapper.SpaceMapper;
 import com.ziio.imagehubbackend.service.UserService;
+import com.ziio.imagehubbackend.vo.space.analyze.SpaceSizeAnalyzeResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import javax.annotation.Resource;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
@@ -143,6 +148,13 @@ public class SpaceServiceImpl extends ServiceImpl<SpaceMapper, Space>
         queryWrapper.orderBy(StrUtil.isNotBlank(sortField),sortOrder.equals("ascend"),sortField);
         return queryWrapper;
     }
+
+    @Override
+    public void checkSpaceAuth(User loginUser, Space space) {
+        // 检验是否管理员或者创建者
+        if(!space.getUserId().equals(loginUser.getId()) && !userService.isAdmin(loginUser)) throw new BusinessException(ErrorCode.NO_AUTH_ERROR);
+    }
+
 }
 
 

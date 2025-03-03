@@ -6,6 +6,10 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.ziio.imagehubbackend.entity.User;
 import com.ziio.imagehubbackend.request.space.SpaceAddRequest;
 import com.ziio.imagehubbackend.request.space.SpaceQueryRequest;
+import com.ziio.imagehubbackend.request.space.analyze.SpaceSizeAnalyzeRequest;
+import com.ziio.imagehubbackend.vo.space.analyze.SpaceSizeAnalyzeResponse;
+
+import java.util.List;
 
 /**
 * @author Ziio
@@ -41,4 +45,13 @@ public interface SpaceService extends IService<Space> {
      * @return
      */
     QueryWrapper<Space> getQueryWrapper(SpaceQueryRequest spaceQueryRequest);
+
+    /**
+     * 检验空间权限
+     * @param loginUser
+     * @param space
+     */
+    void checkSpaceAuth(User loginUser, Space space);
+
+
 }
