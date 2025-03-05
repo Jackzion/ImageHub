@@ -1,4 +1,13 @@
 <template>
+  <a-space>
+        <a-button type="primary" href="/add_space" target="_blank">+ 创建空间</a-button>
+        <a-button type="primary" ghost href="/space_analyze?queryPublic=1" target="_blank"
+          >分析公共图库</a-button
+        >
+        <a-button type="primary" ghost href="/space_analyze?queryAll=1" target="_blank"
+          >分析全部空间</a-button
+        >
+  </a-space>
     <a-form layout="inline" :model="searchParams" @finish="doSearch">
         <a-form-item label="spaceName">
             <a-input v-model:value="searchParams.spaceName" placeholder="请输入空间名称" />
@@ -49,6 +58,9 @@
           <a-space wrap>
             <a-button type="link" :href="`/edit_space?id=${record.id}`" target="_blank">
               编辑
+            </a-button>
+            <a-button type="link" :href="`/space_analyze?spaceId=${record.id}`" target="_blank">
+              分析
             </a-button>
             <a-button type="link" danger @click="doDelete(record.id)">删除</a-button>
           </a-space>

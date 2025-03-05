@@ -121,6 +121,11 @@ const router = createRouter({
       path: '/search_picture',
       name: '图片搜索',
       component: SearchPicturePage,
+    },
+    {
+      path: '/space_analyze',
+      name: '空间分析',
+      component: SpaceManagePage,
     }
   ],
 })

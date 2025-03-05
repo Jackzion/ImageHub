@@ -16,6 +16,7 @@ import com.ziio.imagehubbackend.service.SpaceAnalyzeService;
 import com.ziio.imagehubbackend.service.SpaceService;
 import com.ziio.imagehubbackend.service.UserService;
 import com.ziio.imagehubbackend.vo.space.analyze.*;
+import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.LinkedHashMap;
@@ -23,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+@Service
 public class SpaceAnalyzeServiceImpl implements SpaceAnalyzeService {
 
     @Resource
