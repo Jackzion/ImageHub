@@ -2,12 +2,13 @@ import { useLoginUserStore } from '@/store/user'
 import router from '@/router'
 import ACCESS_ENUM from './accessEnum'
 
-const firstFetchLoginUser = true
+let firstFetchLoginUser = true
 
 router.beforeEach(async (to , from , next) => {
     const loginUserStore = useLoginUserStore()
     if(firstFetchLoginUser){
         await loginUserStore.fetchLoginUser()
+        firstFetchLoginUser = false
     }
 
     const loginuser = loginUserStore.loginUser
